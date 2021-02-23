@@ -6,7 +6,7 @@ data "aws_vpc" "this" {
 }
 
 data "aws_subnet_ids" "public" {
-  vpc_id = "${data.aws_vpc.this.id}"
+  vpc_id = data.aws_vpc.this.id
   filter {
     name   = "tag:Name"
     values = var.subnet_name
@@ -65,6 +65,16 @@ resource "aws_lb_target_group" "app" {
       protocol            = var.health_check.protocol
       timeout             = var.health_check.timeout
       unhealthy_threshold = var.health_check.unhealthy_threshold
+    }
+  }
+
+  dynamic "stickiness" {
+    for_each = var.lb_stickiness != null ? [1] : []
+
+    content {
+      type            = var.lb_stickiness.type
+      cookie_duration = var.lb_stickiness.cookie_duration
+      enabled         = var.lb_stickiness.enabled
     }
   }
 
