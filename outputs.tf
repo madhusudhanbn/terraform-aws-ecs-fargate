@@ -8,6 +8,6 @@ output "task_definition_arn" {
 output "task_security_group_id" {
   value       = aws_security_group.ecs_tasks.id
   sensitive   = false
-  description = "description"
+  description = "The id of the Security Group used in tasks."
   depends_on  = []
 }
