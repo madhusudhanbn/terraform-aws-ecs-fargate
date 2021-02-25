@@ -33,7 +33,7 @@ data "aws_lb_listener" "http" {
 ## ECS Cluster
 module "ecs_cluster" {
   source  = "brunordias/ecs-cluster/aws"
-  version = "~> 1.0.0"
+  version = "~> 2.0.0"
 
   name               = "terraform-ecs-test"
   capacity_providers = ["FARGATE", "FARGATE_SPOT"]
@@ -146,6 +146,7 @@ No requirements.
 |------|-------------|------|---------|:--------:|
 | app\_environment | List of one or more environment variables to be inserted in the container. | `list(any)` | `[]` | no |
 | app\_port | The application TCP port number. | `number` | n/a | yes |
+| assign\_public\_ip | Assign a public IP address to the ENI | `bool` | `true` | no |
 | autoscaling | Boolean designating an Auto Scaling. | `bool` | `false` | no |
 | autoscaling\_settings | Settings of Auto Scaling. | `map(any)` | <pre>{<br>  "max_capacity": 0,<br>  "min_capacity": 0,<br>  "scale_in_cooldown": 300,<br>  "scale_out_cooldown": 300,<br>  "target_cpu_value": 0<br>}</pre> | no |
 | capacity\_provider\_strategy | The capacity provider strategy to use for the service. | `map(any)` | `null` | no |
@@ -184,7 +185,7 @@ No requirements.
 | Name | Description |
 |------|-------------|
 | task\_definition\_arn | The ARN of the task definition. |
-| task\_security\_group\_id | description |
+| task\_security\_group\_id | The id of the Security Group used in tasks. |
 
 ## Authors
 

@@ -201,3 +201,9 @@ variable "lb_stickiness" {
   default     = null
   description = "LB Stickiness block."
 }
+
+variable "assign_public_ip" {
+  type        = bool
+  default     = true
+  description = "Assign a public IP address to the ENI"
+}
