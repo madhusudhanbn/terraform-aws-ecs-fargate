@@ -33,7 +33,7 @@ data "aws_lb_listener" "http" {
 ## ECS Cluster
 module "ecs_cluster" {
   source  = "brunordias/ecs-cluster/aws"
-  version = "~> 2.0.0"
+  version = "~> 1.0.0"
 
   name               = "terraform-ecs-test"
   capacity_providers = ["FARGATE", "FARGATE_SPOT"]
@@ -50,7 +50,7 @@ module "ecs_cluster" {
 ## ECS Fargate
 module "ecs_fargate" {
   source  = "brunordias/ecs-fargate/aws"
-  version = "~> 1.0.0"
+  version = "~> 2.0.0"
 
   name                      = "nginx"
   region                    = "us-east-1"
