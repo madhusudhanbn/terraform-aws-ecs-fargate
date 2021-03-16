@@ -50,7 +50,7 @@ module "ecs_cluster" {
 ## ECS Fargate
 module "ecs_fargate" {
   source  = "brunordias/ecs-fargate/aws"
-  version = "~> 2.0.0"
+  version = "~> 3.0.0"
 
   name                      = "nginx"
   region                    = "us-east-1"
@@ -77,6 +77,7 @@ module "ecs_fargate" {
   ]
   lb_host_header = ["app.example.com"]
   lb_priority    = 101
+  lb_arn_suffix  = aws_lb.this.arn_suffix
   health_check = {
     enabled             = true
     healthy_threshold   = 2
@@ -100,6 +101,15 @@ module "ecs_fargate" {
     target_cpu_value   = 60
     scale_in_cooldown  = 60
     scale_out_cooldown = 900
+  }
+  cloudwatch_settings = {
+    enabled          = true
+    prefix           = "example"
+    cpu_threshold    = 80
+    memory_threshold = 80
+    max_task_count   = 4
+    min_task_count   = 1
+    sns_topic_arn    = ["arn:aws:sns:us-east-1:1111111111:NotifyMe"]
   }
   app_environment = [
     {
