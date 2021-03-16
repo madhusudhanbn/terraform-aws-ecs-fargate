@@ -130,6 +130,12 @@ variable "lb_target_group_type" {
   description = "The type of target that you must specify when registering targets with this target group."
 }
 
+variable "lb_arn_suffix" {
+  type        = string
+  default     = ""
+  description = "The ARN suffix for use with Auto Scaling ALB requests per target."
+}
+
 variable "lb_listener_arn" {
   type        = list(any)
   default     = [""]
@@ -206,4 +212,10 @@ variable "assign_public_ip" {
   type        = bool
   default     = true
   description = "Assign a public IP address to the ENI"
+}
+
+variable "cloudwatch_settings" {
+  type        = any
+  default     = {}
+  description = "Settings of Cloudwatch Alarms."
 }

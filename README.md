@@ -151,6 +151,7 @@ No requirements.
 | autoscaling\_settings | Settings of Auto Scaling. | `map(any)` | <pre>{<br>  "max_capacity": 0,<br>  "min_capacity": 0,<br>  "scale_in_cooldown": 300,<br>  "scale_out_cooldown": 300,<br>  "target_cpu_value": 0<br>}</pre> | no |
 | capacity\_provider\_strategy | The capacity provider strategy to use for the service. | `map(any)` | `null` | no |
 | cloudwatch\_log\_group\_name | The name of an existing CloudWatch group. | `string` | `""` | no |
+| cloudwatch\_settings | Settings of Cloudwatch Alarms. | `any` | `{}` | no |
 | ecs\_cluster | The ARN of ECS cluster. | `string` | `""` | no |
 | ecs\_service | Boolean designating a service. | `bool` | `false` | no |
 | ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running. | `number` | `1` | no |
@@ -161,6 +162,7 @@ No requirements.
 | fargate\_memory | Fargate instance memory to provision (in MiB). | `number` | `512` | no |
 | health\_check | Health check in Load Balance target group. | `map(any)` | `null` | no |
 | image\_uri | The container image URI. | `string` | n/a | yes |
+| lb\_arn\_suffix | The ARN suffix for use with Auto Scaling ALB requests per target. | `string` | `""` | no |
 | lb\_host\_header | List of host header patterns to match. | `list(any)` | `null` | no |
 | lb\_listener\_arn | List of ARN LB listeners | `list(any)` | <pre>[<br>  ""<br>]</pre> | no |
 | lb\_path\_pattern | List of path patterns to match. | `list(any)` | `null` | no |
