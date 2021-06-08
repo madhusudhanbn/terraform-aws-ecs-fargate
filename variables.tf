@@ -219,3 +219,9 @@ variable "cloudwatch_settings" {
   default     = {}
   description = "Settings of Cloudwatch Alarms."
 }
+
+variable "deployment_circuit_breaker" {
+  type        = bool
+  default     = false
+  description = "Boolean designating a deployment circuit breaker."
+}

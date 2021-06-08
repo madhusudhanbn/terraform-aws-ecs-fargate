@@ -206,6 +206,33 @@ resource "aws_iam_role" "task_role" {
 EOF
 }
 
+resource "aws_iam_policy" "ssm_policy" {
+  name = "${var.name}-ecs-ssm-policy"
+
+  policy = <<EOF
+{
+   "Version": "2012-10-17",
+   "Statement": [
+       {
+       "Effect": "Allow",
+       "Action": [
+            "ssmmessages:CreateControlChannel",
+            "ssmmessages:CreateDataChannel",
+            "ssmmessages:OpenControlChannel",
+            "ssmmessages:OpenDataChannel"
+       ],
+      "Resource": "*"
+      }
+   ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "task_role_ssm" {
+  role       = aws_iam_role.task_role.name
+  policy_arn = aws_iam_policy.ssm_policy.arn
+}
+
 resource "aws_iam_role_policy_attachment" "task_role" {
   count      = length(var.policies)
   role       = aws_iam_role.task_role.name
@@ -283,13 +310,23 @@ DEFINITION
 resource "aws_ecs_service" "this" {
   count = var.ecs_service == true ? 1 : 0
 
-  name             = "${var.name}-service"
-  cluster          = var.ecs_cluster
-  task_definition  = aws_ecs_task_definition.app.arn
-  desired_count    = var.ecs_service_desired_count
-  launch_type      = var.capacity_provider_strategy == null ? "FARGATE" : null
-  propagate_tags   = "SERVICE"
-  platform_version = var.platform_version
+  name                   = "${var.name}-service"
+  cluster                = var.ecs_cluster
+  task_definition        = aws_ecs_task_definition.app.arn
+  desired_count          = var.ecs_service_desired_count
+  launch_type            = var.capacity_provider_strategy == null ? "FARGATE" : null
+  propagate_tags         = "SERVICE"
+  platform_version       = var.platform_version
+  enable_execute_command = true
+
+  dynamic "deployment_circuit_breaker" {
+    for_each = var.deployment_circuit_breaker == true ? [1] : []
+
+    content {
+      enable   = true
+      rollback = true
+    }
+  }
 
   network_configuration {
     security_groups  = [aws_security_group.ecs_tasks.id]
