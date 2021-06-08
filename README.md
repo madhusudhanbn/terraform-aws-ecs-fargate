@@ -52,19 +52,20 @@ module "ecs_fargate" {
   source  = "brunordias/ecs-fargate/aws"
   version = "~> 3.0.0"
 
-  name                      = "nginx"
-  region                    = "us-east-1"
-  ecs_cluster               = module.ecs_cluster.id
-  image_uri                 = "public.ecr.aws/nginx/nginx:1.19-alpine"
-  platform_version          = "1.4.0"
-  vpc_name                  = "default"
-  subnet_name               = ["public-d", "public-e"]
-  fargate_cpu               = 256
-  fargate_memory            = 512
-  ecs_service_desired_count = 2
-  app_port                  = 80
-  load_balancer             = true
-  ecs_service               = true
+  name                       = "nginx"
+  region                     = "us-east-1"
+  ecs_cluster                = module.ecs_cluster.id
+  image_uri                  = "public.ecr.aws/nginx/nginx:1.19-alpine"
+  platform_version           = "1.4.0"
+  vpc_name                   = "default"
+  subnet_name                = ["public-d", "public-e"]
+  fargate_cpu                = 256
+  fargate_memory             = 512
+  ecs_service_desired_count  = 2
+  app_port                   = 80
+  load_balancer              = true
+  ecs_service                = true
+  deployment_circuit_breaker = true
   policies = [
     "arn:aws:iam::aws:policy/example"
   ]
@@ -162,6 +163,7 @@ No requirements.
 | capacity\_provider\_strategy | The capacity provider strategy to use for the service. | `map(any)` | `null` | no |
 | cloudwatch\_log\_group\_name | The name of an existing CloudWatch group. | `string` | `""` | no |
 | cloudwatch\_settings | Settings of Cloudwatch Alarms. | `any` | `{}` | no |
+| deployment\_circuit\_breaker | Boolean designating a deployment circuit breaker. | `bool` | `false` | no |
 | ecs\_cluster | The ARN of ECS cluster. | `string` | `""` | no |
 | ecs\_service | Boolean designating a service. | `bool` | `false` | no |
 | ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running. | `number` | `1` | no |
