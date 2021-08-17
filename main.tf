@@ -22,7 +22,7 @@ locals {
           hostPort      = var.app_port
         }
       ]
-      environmentFiles = var.app_environment_file_arn != null ? jsonencode([{ "value" : var.app_environment_file_arn, "type" : "s3" }]) : []
+      environmentFiles = var.app_environment_file_arn != null ? jsonencode([{ "value" : var.app_environment_file_arn, "type" : "s3" }]) : jsonencode([])
       environment      = var.app_environment
       mountPoints      = var.efs_mount_configuration
     }
