@@ -22,7 +22,7 @@ locals {
           hostPort      = var.app_port
         }
       ]
-      environmentFiles = var.app_environment_file_arn != null ? jsonencode([{ "value" : var.app_environment_file_arn, "type" : "s3" }]) : jsonencode([])
+      environmentFiles = var.app_environment_file_arn != null ? [{ value = var.app_environment_file_arn, type = "s3" }] : null
       environment      = var.app_environment
       mountPoints      = var.efs_mount_configuration
     }
@@ -332,7 +332,7 @@ resource "aws_ecs_task_definition" "app" {
     }
   }
 
-  container_definitions = var.container_definitions != [] ? jsonencode(var.container_definitions) : jsonencode(local.container_definitions)
+  container_definitions = var.container_definitions != null ? jsonencode(var.container_definitions) : jsonencode(local.container_definitions)
 
   tags = var.tags
 }

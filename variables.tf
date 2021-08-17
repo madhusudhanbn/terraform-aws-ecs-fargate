@@ -234,6 +234,6 @@ variable "app_environment_file_arn" {
 
 variable "container_definitions" {
   type        = list(any)
-  default     = []
+  default     = null
   description = "External ECS container definitions"
 }
