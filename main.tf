@@ -1,3 +1,34 @@
+### Locals
+locals {
+  container_definitions = [
+    {
+      cpu         = var.fargate_cpu
+      image       = var.image_uri
+      memory      = var.fargate_memory
+      name        = var.name
+      networkMode = "awsvpc"
+      essential   = var.fargate_essential
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.this.name
+          awslogs-region        = var.region
+          awslogs-stream-prefix = "ecs"
+        }
+      }
+      portMappings = [
+        {
+          containerPort = var.app_port
+          hostPort      = var.app_port
+        }
+      ]
+      environmentFiles = var.app_environment_file_arn != null ? jsonencode([{ "value" : var.app_environment_file_arn, "type" : "s3" }]) : []
+      environment      = var.app_environment
+      mountPoints      = var.efs_mount_configuration
+    }
+  ]
+}
+
 ### Data
 data "aws_vpc" "this" {
   tags = {
@@ -177,9 +208,35 @@ resource "aws_iam_role_policy" "execution_policy" {
         "ecr:GetDownloadUrlForLayer",
         "ecr:BatchGetImage",
         "logs:CreateLogStream",
-        "logs:PutLogEvents"
+        "logs:PutLogEvents",
+        "s3:GetBucketLocation",
+        "kms:Decrypt"
       ],
       "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "execution_policy_s3" {
+  count = var.app_environment_file_arn != null ? 1 : 0
+
+  name = "${var.name}-ecs-execution-s3-policy"
+  role = aws_iam_role.execution_role.id
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "${var.app_environment_file_arn}"
+      ]
     }
   ]
 }
@@ -275,34 +332,7 @@ resource "aws_ecs_task_definition" "app" {
     }
   }
 
-  container_definitions = <<DEFINITION
-[
-  {
-    "cpu": ${var.fargate_cpu},
-    "image": "${var.image_uri}",
-    "memory": ${var.fargate_memory},
-    "name": "${var.name}",
-    "networkMode": "awsvpc",
-    "essential": ${var.fargate_essential},
-    "logConfiguration": { 
-       "logDriver": "awslogs",
-       "options": { 
-          "awslogs-group" : "${aws_cloudwatch_log_group.this.name}",
-          "awslogs-region": "${var.region}",
-          "awslogs-stream-prefix": "ecs"
-       }
-    },
-    "portMappings": [
-      {
-        "containerPort": ${var.app_port},
-        "hostPort": ${var.app_port}
-      }
-    ],
-    "environment": ${jsonencode(var.app_environment)},
-    "mountPoints": ${jsonencode(var.efs_mount_configuration)}
-  }
-]
-DEFINITION
+  container_definitions = var.container_definitions != [] ? jsonencode(var.container_definitions) : jsonencode(local.container_definitions)
 
   tags = var.tags
 }
