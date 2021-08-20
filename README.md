@@ -156,6 +156,7 @@ No requirements.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | app\_environment | List of one or more environment variables to be inserted in the container. | `list(any)` | `[]` | no |
+| app\_environment\_file\_arn | The ARN from the environment file hosted in S3. | `string` | `null` | no |
 | app\_port | The application TCP port number. | `number` | n/a | yes |
 | assign\_public\_ip | Assign a public IP address to the ENI | `bool` | `true` | no |
 | autoscaling | Boolean designating an Auto Scaling. | `bool` | `false` | no |
@@ -163,6 +164,7 @@ No requirements.
 | capacity\_provider\_strategy | The capacity provider strategy to use for the service. | `map(any)` | `null` | no |
 | cloudwatch\_log\_group\_name | The name of an existing CloudWatch group. | `string` | `""` | no |
 | cloudwatch\_settings | Settings of Cloudwatch Alarms. | `any` | `{}` | no |
+| container\_definitions | External ECS container definitions | `any` | `null` | no |
 | deployment\_circuit\_breaker | Boolean designating a deployment circuit breaker. | `bool` | `false` | no |
 | ecs\_cluster | The ARN of ECS cluster. | `string` | `""` | no |
 | ecs\_service | Boolean designating a service. | `bool` | `false` | no |
