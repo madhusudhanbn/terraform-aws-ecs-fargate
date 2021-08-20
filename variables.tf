@@ -225,3 +225,15 @@ variable "deployment_circuit_breaker" {
   default     = false
   description = "Boolean designating a deployment circuit breaker."
 }
+
+variable "app_environment_file_arn" {
+  type        = string
+  default     = null
+  description = "The ARN from the environment file hosted in S3."
+}
+
+variable "container_definitions" {
+  type        = any
+  default     = null
+  description = "External ECS container definitions"
+}
