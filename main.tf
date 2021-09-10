@@ -210,7 +210,8 @@ resource "aws_iam_role_policy" "execution_policy" {
         "logs:CreateLogStream",
         "logs:PutLogEvents",
         "s3:GetBucketLocation",
-        "kms:Decrypt"
+        "kms:Decrypt",
+        "secretsmanager:GetSecretValue"
       ],
       "Resource": "*"
     }

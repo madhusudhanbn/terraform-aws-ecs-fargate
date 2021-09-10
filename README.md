@@ -50,7 +50,7 @@ module "ecs_cluster" {
 ## ECS Fargate
 module "ecs_fargate" {
   source  = "brunordias/ecs-fargate/aws"
-  version = "~> 3.0.0"
+  version = "~> 4.0.0"
 
   name                       = "nginx"
   region                     = "us-east-1"
